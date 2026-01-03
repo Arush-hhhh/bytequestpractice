@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>vAIdya | Patient Chart</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>Patient Chart</h1>
+<p>Longitudinal view of patient medical history</p>
+
+<hr>
+
+<h3>Patient Details</h3>
+<p><b>Name:</b> {{ patient.name }}</p>
+<p><b>Age:</b> {{ patient.age }}</p>
+<p><b>Sex:</b> {{ patient.sex }}</p>
+
+<hr>
+
+<h3>Visit History</h3>
+
+{% if visits %}
+  <ul>
+    {% for v in visits %}
+      <li>
+        <b>Date:</b> {{ v.date }} <br>
+        <b>Symptoms:</b> {{ v.symptoms }} <br>
+        <b>Probable Condition:</b> {{ v.condition }} <br>
+        <b>Risk Level:</b> {{ v.risk }}
+      </li>
+      <br>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No previous visits recorded.</p>
+{% endif %}
+
+<hr>
+
+<h3>Clinical Notes</h3>
+<p>
+This chart helps clinicians track symptom progression, historical AI suggestions,
+and evolving risk patterns over time.
+</p>
+
+<p class="disclaimer">
+  Patient chart is generated for clinical support only.
+  All insights are suggestive and require professional validation.
+</p>
+
+</body>
+</html>
