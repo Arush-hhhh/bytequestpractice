@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vAIdya | Clinical Decision Support</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-bar">
+        ⚠️ <strong>DISCLAIMER:</strong> This AI is a clinical decision support tool. Final medical decisions must be made by qualified clinicians. It does not diagnose.
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">vAIdya <span class="subtitle">Clinical Assistant</span></div>
+        <div class="nav-links">
+            <a href="#" class="active">Overview</a>
+            <a href="#">Patient Chart</a>
+            <a href="#">Messages</a>
+            <a href="#">Calendar</a>
+        </div>
+        <div class="user-profile">
+            <div class="avatar">Dr. S</div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        
+        <!-- Center Panel: Visual Anatomy & Main Interaction -->
+        <main class="center-stage">
+            
+            <!-- Analysis Mode (Input) -->
+            <div id="analysis-view" class="view-section active">
+                <header class="section-header">
+                    <h1>Patient Analysis</h1>
+                    <p>Enter patient data to generate probabilistic risk assessments.</p>
+                </header>
+
+                <div class="analysis-grid">
+                    <div class="input-panel">
+                        <form id="analysis-form">
+                            <div class="form-group">
+                                <label>Patient Name</label>
+                                <input type="text" id="p-name" placeholder="ex. John Doe" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Age</label>
+                                    <input type="number" id="p-age" placeholder="45" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sex</label>
+                                    <select id="p-sex">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Reported Symptoms</label>
+                                <textarea id="p-symptoms" placeholder="ex. Chest pain, difficulty breathing, nausea..." required></textarea>
+                                <small>Separate symptoms with commas.</small>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary" id="analyze-btn">
+                                <span class="icon">🔍</span> Run Analysis
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Visual Anatomy Module -->
+                    <div class="anatomy-module">
+                        <h3>Symptom Localization</h3>
+                        <div class="body-diagram-container">
+                            <!-- Simple Abstract Body SVG -->
+                            <svg viewBox="0 0 100 200" class="body-svg">
+                                <path d="M50,10 C40,10 35,15 35,25 C35,32 40,35 50,35 C60,35 65,32 65,25 C65,15 60,10 50,10 Z" class="body-part head" /> <!-- Head -->
+                                <path d="M35,35 L20,60 L25,65 L40,45 L40,100 L30,150 L35,160 L45,110 L55,110 L65,160 L70,150 L60,100 L60,45 L75,65 L80,60 L65,35 Z" class="body-part torso-limbs" /> <!-- Body -->
+                            </svg>
+                            <!-- Overlays to indicate severity (Managed by JS) -->
+                            <div class="status-indicator head-indicator"></div>
+                            <div class="status-indicator chest-indicator"></div>
+                        </div>
+                        <div class="legend">
+                           <span class="dot green"></span> Mild
+                           <span class="dot yellow"></span> Moderate
+                           <span class="dot red"></span> Critical
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Area -->
+                <div id="results-area" class="hidden">
+                    <h2>Probabilistic Assessment</h2>
+                    <div class="results-list" id="results-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision Support Mode (Report) -->
+            <div id="roadmap-view" class="view-section hidden">
+                <header class="section-header">
+                    <button class="back-btn" id="back-to-analysis">← Back to Analysis</button>
+                    <h1>Decision Support Roadmap</h1>
+                </header>
+
+                <div class="care-card">
+                    <div class="care-header">
+                        <div class="care-title">
+                            <h3>Target Condition: <span id="locked-disease" class="highlight-text"></span></h3>
+                            <span class="badge">Probable</span>
+                        </div>
+                        <div class="patient-summary" id="roadmap-patient-summary">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <div class="roadmap-grid">
+                        <div class="roadmap-col">
+                            <h4>💊 Medications (Class)</h4>
+                            <ul id="roadmap-meds"></ul>
+                        </div>
+                        <div class="roadmap-col">
+                            <h4>🥗 Lifestyle & Diet</h4>
+                            <ul id="roadmap-lifestyle"></ul>
+                        </div>
+                        <div class="roadmap-col">
+                            <h4>📋 Monitoring</h4>
+                            <ul id="roadmap-monitoring"></ul>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-section">
+                        <h4>⚠️ Early Warning Signals</h4>
+                        <p>Monitor for signs of: <span id="comorbidities">Hypertension (Generalized risk)</span></p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Panel -->
+        <aside class="right-sidebar">
+            <div class="card info-card">
+                <h4>Attending Physician</h4>
+                <div class="doctor-info">
+                    <strong>Dr. Sarah Connor</strong>
+                    <span>Internal Medicine</span>
+                </div>
+            </div>
+            
+            <div class="card summary-card">
+                <h4>Session Context</h4>
+                <p><strong>System Confidence:</strong> <span id="sys-conf">--</span></p>
+                <p><strong>Data Points:</strong> <span id="data-pts">0</span></p>
+            </div>
+        </aside>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
